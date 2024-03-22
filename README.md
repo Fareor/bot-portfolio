@@ -7,3 +7,15 @@
 В самом коде можно увидеть кратое описание хендлеров бота,
 
 сделано это для того чтобы лучше разобраться в коде другим людям
+
+**Старт бота:**
+
+![image](https://github.com/Fareor/bot-portfolio/assets/127655715/47ab6aee-55ac-454d-b61a-215e287a974d)
+
+**Создание проекта:**
+
+![image](https://github.com/Fareor/bot-portfolio/assets/127655715/11586af6-58eb-44ff-953a-1a9d529b5ced)
+
+**Изменение информации о проекте:**
+
+![image](https://github.com/Fareor/bot-portfolio/assets/127655715/c4f8dca6-bc68-4b4c-81a5-5534db54a299)
