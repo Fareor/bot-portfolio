@@ -1,4 +1,3 @@
-
 from logic import DB_Manager
 from config import *
 from telebot import TeleBot
@@ -48,10 +47,11 @@ def info_project(message, project_name):
         Skills: {skills}
         """)
 
+# Команда для старта бота
 @bot.message_handler(commands=['start'])
 def start_command(message):
-    bot.send_message(message.chat.id, """Привет! Я бот-менеджер проектов
-Помогу тебе сохранить твои проекты и информацию о них!) 
+    bot.send_message(message.chat.id, """Привет! У этого бота ты сможешь создавать свои проекты!
+А также сохранять информацию о них!
 """)
     info(message)
     
@@ -59,17 +59,17 @@ def start_command(message):
 def info(message):
     bot.send_message(message.chat.id,
 """
-Вот команды которые могут тебе помочь:
+Команды доступные у бота:
 
-/new_project - используй для добавления нового проекта
-/projects - используй для отображения всех проектов
-/update_projects - используй для изменения данных о проекте
-/skills - используй для привязки навыков к проекту
-/delete - используй для удаления проекта
+🤔 /new_project - создание нового проекта
+📋 /projects - список ранее созданых тобой проектов
+📝 /update_projects - изменение данных о проекте
+🗑 /delete - удалить определённый проект
+💾 /skills - привязка навыков к проекту
 
-Также ты можешь ввести имя проекта и узнать информацию о нем""")
+""")
     
-
+# Создание нового проекта
 @bot.message_handler(commands=['new_project'])
 def addtask_command(message):
     bot.send_message(message.chat.id, "Введите название проекта:")
@@ -103,7 +103,7 @@ def callback_project(message, data, statuses):
     bot.send_message(message.chat.id, "Проект сохранен")
     info(message)
 
-
+# Дать определённому проекту навык
 @bot.message_handler(commands=['skills'])
 def skill_handler(message):
     user_id = message.from_user.id
@@ -144,7 +144,7 @@ def set_skill(message, project_name, skills):
     manager.insert_skill(user_id, project_name, skill )
     bot.send_message(message.chat.id, f'Навык {skill} добавлен проекту {project_name}')
 
-
+# Список проектов
 @bot.message_handler(commands=['projects'])
 def get_projects(message):
     user_id = message.from_user.id
@@ -155,13 +155,14 @@ def get_projects(message):
     else:
         no_projects(message)
 
+# Информация о проекте имя которого ты напсисал боту
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
     project_name = call.data
     info_project(call.message, project_name)
     info(call.message)
 
-
+# Удаление проекта
 @bot.message_handler(commands=['delete'])
 def delete_handler(message):
     user_id = message.from_user.id
@@ -190,6 +191,7 @@ def delete_project(message, projects):
     bot.send_message(message.chat.id, f'Проект {project} удален!')
 
 
+# Обновление информации у проекта
 @bot.message_handler(commands=['update_projects'])
 def update_project(message):
     user_id = message.from_user.id
@@ -207,7 +209,7 @@ def update_project_step_2(message, projects):
         cansel(message)
         return
     if project_name not in projects:
-        bot.send_message(message.chat.id, "Что-то пошло не так!) Выбери проект, который хочешь изменить еще раз:", reply_markup=gen_markup(projects))
+        bot.send_message(message.chat.id, "Что-то пошло не так! Выбери проект, который хочешь изменить еще раз:", reply_markup=gen_markup(projects))
         bot.register_next_step_handler(message, update_project_step_2, projects=projects )
         return
     bot.send_message(message.chat.id, "Выбери, что требуется изменить в проекте", reply_markup=gen_markup(attributes_of_projects.keys()))
@@ -219,7 +221,7 @@ def update_project_step_3(message, project_name):
         cansel(message)
         return
     if attribute not in attributes_of_projects.keys():
-        bot.send_message(message.chat.id, "Кажется, ты ошибся, попробуй еще раз!)", reply_markup=gen_markup(attributes_of_projects.keys()))
+        bot.send_message(message.chat.id, "Кажется, ты ошибся, попробуй еще раз!", reply_markup=gen_markup(attributes_of_projects.keys()))
         bot.register_next_step_handler(message, update_project_step_3, project_name=project_name)
         return
     elif attribute == "Статус":
@@ -237,7 +239,7 @@ def update_project_step_4(message, project_name, attribute):
         elif update_info == cancel_button:
             cansel(message)
         else:
-            bot.send_message(message.chat.id, "Был выбран неверный статус, попробуй еще раз!)", reply_markup=gen_markup([x[0] for x in rows]))
+            bot.send_message(message.chat.id, "Был выбран неверный статус, попробуй еще раз!", reply_markup=gen_markup([x[0] for x in rows]))
             bot.register_next_step_handler(message, update_project_step_4, project_name=project_name, attribute=attribute)
             return
     user_id = message.from_user.id
@@ -246,7 +248,7 @@ def update_project_step_4(message, project_name, attribute):
     bot.send_message(message.chat.id, "Готово! Обновления внесены!)")
     info(message)
 
-
+# Пишет список команд если пользователь пишет что-то кроме них
 @bot.message_handler(func=lambda message: True)
 def text_handler(message):
     user_id = message.from_user.id
