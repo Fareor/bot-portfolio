@@ -20,7 +20,7 @@ class DB_Manager:
                             status_id INTEGER,
                             FOREIGN KEY(status_id) REFERENCES status(status_id)
                         )''') 
-            conn.execute('''CREATE TABLE skills (
+            conn.execute('''CREATE TABLE skill (
                             skill_id INTEGER PRIMARY KEY,
                             skill_name TEXT
                         )''')
@@ -122,10 +122,13 @@ WHERE project_name=? AND user_id=?
         sql = "DELETE FROM skills WHERE skill_id = ? AND project_id = ? "
         self.__executemany(sql, [(skill_id, project_id)])
 
+    def delete_status(self, project_id, status_id):
+        sql = "DELETE FROM status WHERE status_id = ? AND project_id = ? "
+        self.__executemany(sql, [(status_id, project_id)])
+
 
 
 if __name__ == '__main__':
     manager = DB_Manager(DATABASE)
     manager.create_tables()
     manager.default_insert()
-
