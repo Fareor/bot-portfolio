@@ -1,2 +1,2 @@
-TOKEN = '7184925989:AAE3JbYO1PLniAdkAIwhFL_j-FDOGsgvUM0'
+TOKEN = ''
 DATABASE = 'bwomp.db'
